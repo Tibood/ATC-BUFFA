@@ -17,7 +17,7 @@ function findProjection(pos, a, b) {
 class Vehicle {
   static debug = false;
 
-  constructor(x, y, img = null) {
+  constructor(x, y, img, altitude) {
     // position du véhicule
     this.pos = createVector(x, y);
     // vitesse du véhicule
@@ -42,6 +42,8 @@ class Vehicle {
     // chemin derrière vaisseaux
     this.path = [];
     this.pathMaxLength = 30;
+
+    this.alt = altitude;
 
     // image du véhicule
     this.img = img;
@@ -68,8 +70,6 @@ class Vehicle {
   }
 
   avoid(obstacles) {
-    // TODO
-
 
     // il regarde par exemple 20 frames devant lui
     let ahead = this.vel.copy()
@@ -125,6 +125,11 @@ class Vehicle {
       // on calcule la distance4 entre le vaisseau et
       // ce vehicule
       distance4 = this.pos.dist(vehiculeLePlusProche.pos);
+    }
+
+    // Si pas d'obstacle à la même altitude, pas d'évitement
+    if (obstacleLePlusProche === undefined) {
+      return createVector(0, 0);
     }
 
     let distance = obstacleLePlusProche.pos.dist(pointAuBoutDeAhead);
@@ -345,6 +350,9 @@ class Vehicle {
     let obstacleLePlusProche = undefined;
 
     obstacles.forEach(o => {
+      // Ignorer les obstacles à une altitude différente
+      if (o.alt !== this.alt) return;
+
       // Je calcule la distance entre le vaisseau et l'obstacle
       const distance = this.pos.dist(o.pos);
 

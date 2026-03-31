@@ -1,21 +1,23 @@
 class Obstacle {
-  constructor(x, y, r, couleur = "red") {
+  constructor(x, y, r, couleur, altitude) {
     this.pos = createVector(x, y);
     this.r = r;
     this.color = couleur;
+    this.alt = altitude; // altitude de l'obstacle
   }
 
   show() {
     push();
 
     // Remplir le cercle en rouge
-    fill(255, 0, 0);
-    stroke(0);
-    strokeWeight(3);
+    noFill();
+
+    stroke(255, 0, 0);
+    strokeWeight(6);
     circle(this.pos.x, this.pos.y, this.r * 2);
 
     // Ajouter les hachures (lignes diagonales limitées au cercle)
-    stroke(0);
+    stroke(255, 0, 0);
     strokeWeight(2);
     let spacing = 15;
 
@@ -43,8 +45,8 @@ class Obstacle {
     // Redessiner le contour du cercle et le centre
     push();
     noFill();
-    stroke(0);
-    strokeWeight(3);
+    stroke(255, 0, 0);
+    strokeWeight(6);
     circle(this.pos.x, this.pos.y, this.r * 2);
 
     fill(0);
