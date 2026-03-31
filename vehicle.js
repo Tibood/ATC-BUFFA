@@ -63,8 +63,8 @@ class Vehicle {
 
     this.applyForce(seekForce);
     this.applyForce(avoidForce);
-    this.applyForce(separateForce);
-    this.applyForce(boudariesForce);
+    //this.applyForce(separateForce);
+    //this.applyForce(boudariesForce);
   }
 
   avoid(obstacles) {
@@ -581,19 +581,19 @@ class Vehicle {
     pop();
   }
   drawVector(pos, v, color) {
-    // push();
-    // // Dessin du vecteur vitesse
-    // // Il part du centre du véhicule et va dans la direction du vecteur vitesse
-    // strokeWeight(3);
-    // stroke(color);
-    // line(pos.x, pos.y, pos.x + v.x, pos.y + v.y);
-    // // dessine une petite fleche au bout du vecteur vitesse
-    // let arrowSize = 5;
-    // translate(pos.x + v.x, pos.y + v.y);
-    // rotate(v.heading());
-    // translate(-arrowSize / 2, 0);
-    // triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
-    // pop();
+    push();
+    // Dessin du vecteur vitesse
+    // Il part du centre du véhicule et va dans la direction du vecteur vitesse
+    strokeWeight(3);
+    stroke(color);
+    line(pos.x, pos.y, pos.x + v.x, pos.y + v.y);
+    // dessine une petite fleche au bout du vecteur vitesse
+    let arrowSize = 5;
+    translate(pos.x + v.x, pos.y + v.y);
+    rotate(v.heading());
+    translate(-arrowSize / 2, 0);
+    triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
+    pop();
   }
 
   // que fait cette méthode ?
