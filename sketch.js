@@ -5,7 +5,7 @@ let vehicules = [];
 let avionImg;
 
 function preload() {
-  avionImg = loadImage('img/avion.png');
+  avionImg = loadImage('assets/mode-avion.png');
 }
 
 function setup() {
@@ -14,17 +14,16 @@ function setup() {
   pursuer2 = new Vehicle(random(width), random(height), avionImg);
 
   vehicules.push(pursuer1);
-  //vehicules.push(pursuer2);
 
   // On cree un obstace au milieu de l'écran
   // un cercle de rayon 100px
   // TODO
-  obstacles.push(new Obstacle(width / 2, height / 2, 100, "green"));
+  obstacles.push(new Obstacle(width / 2, height / 2, 100, "red"));
 }
 
 function draw() {
   // changer le dernier param (< 100) pour effets de trainée
-  background(0, 0, 0, 100);
+  background(255, 255, 255, 255);
 
   target = createVector(mouseX, mouseY);
 

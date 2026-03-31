@@ -17,7 +17,7 @@ function findProjection(pos, a, b) {
 class Vehicle {
   static debug = false;
 
-  constructor(x, y) {
+  constructor(x, y, img = null) {
     // position du véhicule
     this.pos = createVector(x, y);
     // vitesse du véhicule
@@ -43,6 +43,8 @@ class Vehicle {
     this.path = [];
     this.pathMaxLength = 30;
 
+    // image du véhicule
+    this.img = img;
   }
 
   // on fait une méthode applyBehaviors qui applique les comportements
@@ -527,11 +529,19 @@ class Vehicle {
     push();
     // on déplace le repère de référence.
     translate(this.pos.x, this.pos.y);
-    // et on le tourne. heading() renvoie l'angle du vecteur vitesse (c'est l'angle du véhicule)
-    rotate(this.vel.heading());
+    // et on le tourne. atan2 gère correctement tous les cas (y compris quand vel = 0)
+    rotate(atan2(this.vel.y, this.vel.x) + PI / 2);
 
-    // Dessin d'un véhicule sous la forme d'un triangle. Comme s'il était droit, avec le 0, 0 en haut à gauche
-    triangle(-this.r_pourDessin, -this.r_pourDessin / 2, -this.r_pourDessin, this.r_pourDessin / 2, this.r_pourDessin, 0);
+    // Affiche l'image si disponible, sinon affiche le triangle
+    if (this.img) {
+      // Affiche l'image centrée
+      imageMode(CENTER);
+      image(this.img, 0, 0, this.r_pourDessin * 2, this.r_pourDessin * 2);
+      imageMode(CORNER);
+    } else {
+      // Dessin d'un véhicule sous la forme d'un triangle. Comme s'il était droit, avec le 0, 0 en haut à gauche
+      triangle(-this.r_pourDessin, -this.r_pourDessin / 2, -this.r_pourDessin, this.r_pourDessin / 2, this.r_pourDessin, 0);
+    }
     // Que fait cette ligne ?
     //this.edges();
 
@@ -571,19 +581,19 @@ class Vehicle {
     pop();
   }
   drawVector(pos, v, color) {
-    push();
-    // Dessin du vecteur vitesse
-    // Il part du centre du véhicule et va dans la direction du vecteur vitesse
-    strokeWeight(3);
-    stroke(color);
-    line(pos.x, pos.y, pos.x + v.x, pos.y + v.y);
-    // dessine une petite fleche au bout du vecteur vitesse
-    let arrowSize = 5;
-    translate(pos.x + v.x, pos.y + v.y);
-    rotate(v.heading());
-    translate(-arrowSize / 2, 0);
-    triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
-    pop();
+    // push();
+    // // Dessin du vecteur vitesse
+    // // Il part du centre du véhicule et va dans la direction du vecteur vitesse
+    // strokeWeight(3);
+    // stroke(color);
+    // line(pos.x, pos.y, pos.x + v.x, pos.y + v.y);
+    // // dessine une petite fleche au bout du vecteur vitesse
+    // let arrowSize = 5;
+    // translate(pos.x + v.x, pos.y + v.y);
+    // rotate(v.heading());
+    // translate(-arrowSize / 2, 0);
+    // triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
+    // pop();
   }
 
   // que fait cette méthode ?
