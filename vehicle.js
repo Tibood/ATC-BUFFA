@@ -540,11 +540,28 @@ class Vehicle {
     // et on le tourne. atan2 gère correctement tous les cas (y compris quand vel = 0)
     rotate(atan2(this.vel.y, this.vel.x) + PI / 2);
 
+
+    let offsetX = 30;
+    let offsetY = 30;
+
     // Affiche l'image si disponible, sinon affiche le triangle
     if (this.img) {
       // Affiche l'image centrée
       imageMode(CENTER);
+      push()
+      scale(1, 1);
+
+
+      tint(0, 0, 0, 150); // Applique une teinte noire avec une certaine transparence
+      image(this.img, 0 + offsetX, 0 + offsetY, this.r_pourDessin * 2, this.r_pourDessin * 2);
+
+      pop();
+
+      push();
+      scale(2, 2);
       image(this.img, 0, 0, this.r_pourDessin * 2, this.r_pourDessin * 2);
+      pop();
+      // Je voudrais afficher la seconde imlage de l'avion
       imageMode(CORNER);
     } else {
       // Dessin d'un véhicule sous la forme d'un triangle. Comme s'il était droit, avec le 0, 0 en haut à gauche

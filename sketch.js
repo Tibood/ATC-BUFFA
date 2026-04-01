@@ -15,7 +15,7 @@ function setup() {
 
   createCanvas(windowWidth, windowHeight);
 
-  pursuer1 = new Vehicle(100, 100, avionImg, 0);
+  pursuer1 = new Vehicle(100, 100, avionImg, 20);
   vehicules.push(pursuer1);
 
   // Créer 3 aéroports aléatoires
