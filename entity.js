@@ -5,6 +5,7 @@ class Entity extends Vehicle {
         this.maxForce = 0;
         this.maxSpeed = 0;
         // Direction aléatoire
+        this.alt = 0
         this.angle = random(TWO_PI);
     }
 

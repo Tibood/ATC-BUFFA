@@ -47,6 +47,10 @@ function draw() {
     obstacle.show();
   })
 
+  // Trier les véhicules par altitude (les plus bas d'abord, les plus hauts en dernier)
+  // Cela permet aux avions plus hauts de s'afficher au-dessus des autres
+  vehicules.sort((a, b) => a.alt - b.alt);
+
   vehicules.forEach(vehicule => {
     // pursuer = le véhicule poursuiveur, il vise un point devant la cible
     vehicule.applyBehaviors(target, obstacles, vehicules);
@@ -64,7 +68,7 @@ function draw() {
 
 function keyPressed() {
   if (key == "v") {
-    vehicules.push(new Vehicle(random(width), random(height), avionImg));
+    vehicules.push(new Vehicle(random(width), random(height), avionImg, random(10, 100)));
   }
   if (key == "d") {
     Vehicle.debug = !Vehicle.debug;
