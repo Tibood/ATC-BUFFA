@@ -17,7 +17,7 @@ function findProjection(pos, a, b) {
 class Vehicle {
   static debug = false;
 
-  constructor(x, y, img, altitude) {
+  constructor(x, y) {
     // position du véhicule
     this.pos = createVector(x, y);
     // vitesse du véhicule
@@ -43,10 +43,7 @@ class Vehicle {
     this.path = [];
     this.pathMaxLength = 30;
 
-    this.alt = altitude;
 
-    // image du véhicule
-    this.img = img;
   }
 
   // on fait une méthode applyBehaviors qui applique les comportements
@@ -70,6 +67,8 @@ class Vehicle {
   }
 
   avoid(obstacles) {
+    // TODO
+
 
     // il regarde par exemple 20 frames devant lui
     let ahead = this.vel.copy()
@@ -121,17 +120,14 @@ class Vehicle {
     // on regarde aussi le vehicule le plus proche
     let vehiculeLePlusProche = this.getVehiculeLePlusProche(vehicules)
     let distance4 = 1000000;
+
+    /*
     if (vehiculeLePlusProche !== undefined) {
       // on calcule la distance4 entre le vaisseau et
       // ce vehicule
       distance4 = this.pos.dist(vehiculeLePlusProche.pos);
     }
-
-    // Si pas d'obstacle à la même altitude, pas d'évitement
-    if (obstacleLePlusProche === undefined) {
-      return createVector(0, 0);
-    }
-
+*/
     let distance = obstacleLePlusProche.pos.dist(pointAuBoutDeAhead);
     let distance2 = obstacleLePlusProche.pos.dist(pointAuBoutDeAhead2);
     let distance3 = obstacleLePlusProche.pos.dist(this.pos);
@@ -350,9 +346,6 @@ class Vehicle {
     let obstacleLePlusProche = undefined;
 
     obstacles.forEach(o => {
-      // Ignorer les obstacles à une altitude différente
-      if (o.alt !== this.alt) return;
-
       // Je calcule la distance entre le vaisseau et l'obstacle
       const distance = this.pos.dist(o.pos);
 
@@ -537,42 +530,11 @@ class Vehicle {
     push();
     // on déplace le repère de référence.
     translate(this.pos.x, this.pos.y);
-    // et on le tourne. atan2 gère correctement tous les cas (y compris quand vel = 0)
-    rotate(atan2(this.vel.y, this.vel.x) + PI / 2);
+    // et on le tourne. heading() renvoie l'angle du vecteur vitesse (c'est l'angle du véhicule)
+    rotate(this.vel.heading());
 
-
-    let offsetX = 30;
-    let offsetY = 30;
-
-    // La taille augmente progressivement avec l'altitude : 0 à altitude 0, 1 à altitude 100
-    let tailleX = map(this.alt, 0, 100, 0, 1);
-    let tailleY = map(this.alt, 0, 100, 0, 1);
-
-
-    // Affiche l'image si disponible, sinon affiche le triangle
-    if (this.img) {
-
-      // Affiche l'image centrée
-      imageMode(CENTER);
-      push()
-      scale(tailleX / 2, tailleY / 2);
-
-
-      tint(0, 0, 0, 150); // Applique une teinte noire avec une certaine transparence
-      image(this.img, 0 + offsetX, 0 + offsetY, this.r_pourDessin * 2, this.r_pourDessin * 2);
-
-      pop();
-
-      push();
-      scale(tailleX, tailleY); // taille avion base
-      image(this.img, 0, 0, this.r_pourDessin * 2, this.r_pourDessin * 2);
-      pop();
-      // Je voudrais afficher la seconde image de l'avion
-      imageMode(CORNER);
-    } else {
-      // Dessin d'un véhicule sous la forme d'un triangle. Comme s'il était droit, avec le 0, 0 en haut à gauche
-      triangle(-this.r_pourDessin, -this.r_pourDessin / 2, -this.r_pourDessin, this.r_pourDessin / 2, this.r_pourDessin, 0);
-    }
+    // Dessin d'un véhicule sous la forme d'un triangle. Comme s'il était droit, avec le 0, 0 en haut à gauche
+    triangle(-this.r_pourDessin, -this.r_pourDessin / 2, -this.r_pourDessin, this.r_pourDessin / 2, this.r_pourDessin, 0);
     // Que fait cette ligne ?
     //this.edges();
 
@@ -586,16 +548,6 @@ class Vehicle {
     // draw velocity vector
     pop();
     //this.drawVector(this.pos, p5.Vector.mult(this.vel, 10), color(255, 0, 0));
-
-    // Afficher le texte au-dessus du véhicule (non affecté par la rotation)
-    if (Vehicle.debug) {
-      push();
-      fill(255);
-      textAlign(CENTER, CENTER);
-      textSize(10);
-      text("Alt: " + this.alt.toFixed(0), this.pos.x, this.pos.y - this.r_pourDessin - 15);
-      pop();
-    }
 
     // Cercle pour évitement entre vehicules et obstacles
     if (Vehicle.debug) {
