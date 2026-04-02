@@ -33,14 +33,6 @@ function draw() {
   // changer le dernier param (< 100) pour effets de trainée
   background(4, 214, 255, 255);
 
-  target = createVector(mouseX, mouseY);
-
-  // Dessin de la cible qui suit la souris
-  // Dessine un cercle de rayon 32px à la position de la souris
-  fill(255, 0, 0);
-  noStroke();
-  circle(target.x, target.y, 32);
-
   // dessin des obstacles
   // TODO
   obstacles.forEach(obstacle => {
@@ -52,13 +44,23 @@ function draw() {
   vehicules.sort((a, b) => a.alt - b.alt);
 
   vehicules.forEach(vehicule => {
-    // pursuer = le véhicule poursuiveur, il vise un point devant la cible
-    vehicule.applyBehaviors(target, obstacles, vehicules);
+    // pursuer = le véhicule poursuiveur, il vise sa target définie à sa création
+    vehicule.applyBehaviors(vehicule.target, obstacles, vehicules);
 
     // déplacement et dessin du véhicule et de la target
     vehicule.update();
     vehicule.show();
   });
+
+  // Supprimer les avions qui ont atteint leur target
+  for (let i = vehicules.length - 1; i >= 0; i--) {
+    if (vehicules[i].target !== undefined) {
+      let distance = vehicules[i].pos.dist(vehicules[i].target);
+      if (distance < 20) {
+        vehicules.splice(i, 1);
+      }
+    }
+  }
 }
 
 // function mousePressed() {
@@ -66,9 +68,58 @@ function draw() {
 //   obstacles.push(new Obstacle(mouseX, mouseY, random(20, 100), "green"));
 // }
 
+// Crée un avion sur un bord aléatoire et lui assigne une target sur un autre bord aléatoire
+function creerAvionBordure() {
+  let x, y;
+  let bord = floor(random(4)); // 0:haut, 1:bas, 2:gauche, 3:droite
+
+  /* Position de création */
+  if (bord === 0) {
+    // Bord haut
+    x = random(0, width);
+    y = 0;
+  } else if (bord === 1) {
+    // Bord bas
+    x = random(0, width);
+    y = height;
+  } else if (bord === 2) {
+    // Bord gauche
+    x = 0;
+    y = random(0, height);
+  } else {
+    // Bord droit
+    x = width;
+    y = random(0, height);
+  }
+
+  /* Target sur un bord aléatoire */
+  let targetX, targetY;
+  let bordTarget = floor(random(4));
+
+  if (bordTarget === 0) {
+    // Bord haut
+    targetX = random(0, width);
+    targetY = 0;
+  } else if (bordTarget === 1) {
+    // Bord bas
+    targetX = random(0, width);
+    targetY = height;
+  } else if (bordTarget === 2) {
+    // Bord gauche
+    targetX = 0;
+    targetY = random(0, height);
+  } else {
+    // Bord droit
+    targetX = width;
+    targetY = random(0, height);
+  }
+
+  return new Avion(x, y, avionImg, random(10, 100), targetX, targetY);
+}
+
 function keyPressed() {
   if (key == "v") {
-    vehicules.push(new Avion(random(width), random(height), avionImg, random(10, 100)));
+    vehicules.push(creerAvionBordure());
   }
   if (key == "d") {
     Vehicle.debug = !Vehicle.debug;

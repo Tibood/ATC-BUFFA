@@ -1,9 +1,11 @@
 class Avion extends Vehicle {
-    constructor(x, y, img, altitude) {
+    constructor(x, y, img, altitude, targetX, targetY) {
         super(x, y);
         // Propriétés spécifiques à l'avion (différences avec Vehicle original)
         this.img = img;
         this.alt = altitude;
+        // Target de l'avion définie à sa création
+        this.target = createVector(targetX, targetY);
     }
 
     // Override: dessiner l'avion avec image et altitude
