@@ -15,6 +15,8 @@ function setup() {
 
   createCanvas(windowWidth, windowHeight);
 
+  nbPlanesUserWant = createSlider(1, 20, 5, 1);
+
   pursuer1 = new Avion(100, 100, avionImg, 20);
   vehicules.push(pursuer1);
 
@@ -45,6 +47,7 @@ function draw() {
 
   vehicules.forEach(vehicule => {
     // pursuer = le véhicule poursuiveur, il vise sa target définie à sa création
+    vehicule.carburant -= 0.05; // Consommation de carburant à chaque frame
     vehicule.applyBehaviors(vehicule.target, obstacles, vehicules);
 
     // déplacement et dessin du véhicule et de la target

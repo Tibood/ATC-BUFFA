@@ -4,8 +4,18 @@ class Avion extends Vehicle {
         // Propriétés spécifiques à l'avion (différences avec Vehicle original)
         this.img = img;
         this.alt = altitude;
+        this.carburant = 100; // pourcentage de carburant
         // Target de l'avion définie à sa création
         this.target = createVector(targetX, targetY);
+    }
+
+    // Override: la vitesse dépend de l'altitude
+    applyBehaviors(target, obstacles, vehicules) {
+        // Ajuster maxSpeed selon l'altitude : de 1 (altitude 0) à 8 (altitude 100)
+        this.maxSpeed = map(this.alt, 0, 100, 1, 8);
+        
+        // Appeler la méthode parent avec la nouvelle maxSpeed
+        super.applyBehaviors(target, obstacles, vehicules);
     }
 
     // Override: dessiner l'avion avec image et altitude
@@ -71,6 +81,17 @@ class Avion extends Vehicle {
             textAlign(CENTER, CENTER);
             textSize(10);
             text("Alt: " + this.alt.toFixed(0), this.pos.x, this.pos.y - this.r_pourDessin - 15);
+            // afficher le carburant
+            text("Carburant: " + this.carburant.toFixed(0) + "%", this.pos.x, this.pos.y - this.r_pourDessin);
+            pop();
+        }
+
+        if (Vehicle.debug) {
+            // Afficher la target de l'avion
+            push();
+            stroke(0, 255, 0);
+            noFill();
+            circle(this.target.x, this.target.y, 10);
             pop();
         }
 
