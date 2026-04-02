@@ -3,26 +3,26 @@ let target;
 let obstacles = [];
 let vehicules = [];
 let entities = [];
+let nbAvionsSlider;
 
 let avionImg;
 
 function preload() {
   avionImg = loadImage('assets/mode-avion.png');
-  airportIcon = loadImage('assets/airport.png');
 }
 
 function setup() {
 
   createCanvas(windowWidth, windowHeight);
 
-  nbPlanesUserWant = createSlider(1, 20, 5, 1);
+  nbAvionsSlider = creerUnSlider("Nombre avions", vehicules, 0, 20, 0, 1, 20, 20, "nbAvionsSlider");
 
-  pursuer1 = new Avion(100, 100, avionImg, 20);
-  vehicules.push(pursuer1);
+  // pursuer1 = new Avion(100, 100, avionImg, 20);
+  // vehicules.push(pursuer1);
 
   // Créer 3 aéroports aléatoires
   for (let i = 0; i < 3; i++) {
-    let airport = new Entity(random(width), random(height), airportIcon, 0);
+    let airport = new Airport(random(width), random(height));
     vehicules.push(airport);
     entities.push(airport);
   }
@@ -45,15 +45,52 @@ function draw() {
   // Cela permet aux avions plus hauts de s'afficher au-dessus des autres
   vehicules.sort((a, b) => a.alt - b.alt);
 
-  vehicules.forEach(vehicule => {
-    // pursuer = le véhicule poursuiveur, il vise sa target définie à sa création
-    vehicule.carburant -= 0.05; // Consommation de carburant à chaque frame
-    vehicule.applyBehaviors(vehicule.target, obstacles, vehicules);
+  // Compter seulement les avions (avec carburant)
+  let nbAvions = vehicules.filter(v => v.carburant !== undefined).length;
 
-    // déplacement et dessin du véhicule et de la target
-    vehicule.update();
-    vehicule.show();
-  });
+  // Créer des avions si nécessaire
+  while (nbAvions < nbAvionsSlider.value()) {
+    vehicules.push(creerAvionBordure());
+    nbAvions++;
+  }
+
+  // Supprimer des avions aléatoirement si le slider diminue
+  while (nbAvions > nbAvionsSlider.value()) {
+    let indexAvions = [];
+    for (let i = 0; i < vehicules.length; i++) {
+      if (vehicules[i].carburant !== undefined) {
+        indexAvions.push(i);
+      }
+    }
+    if (indexAvions.length > 0) {
+      let indexAleatoire = indexAvions[floor(random(indexAvions.length))];
+      vehicules.splice(indexAleatoire, 1);
+      nbAvions--;
+    } else {
+      break;
+    }
+  }
+
+  if (vehicules.length != 0) {
+    vehicules.forEach(vehicule => {
+      // Traiter seulement les avions (qui ont carburant et target)
+      if (vehicule.carburant !== undefined && vehicule.target !== undefined && vehicule) {
+        vehicule.carburant -= 0.05; // Consommation de carburant à chaque frame
+        if (vehicule.carburant < 30) {
+          vehicule.maxSpeed = map(vehicule.carburant, 0, 30, 0, 8); // Réduire la vitesse à mesure que le carburant diminue
+        }
+      }
+
+      // Appliquer les comportements si la target existe
+      if (vehicule.target !== undefined) {
+        vehicule.applyBehaviors(vehicule.target, obstacles, vehicules);
+      }
+
+      // déplacement et dessin du véhicule et de la target
+      vehicule.update();
+      vehicule.show();
+    });
+  }
 
   // Supprimer les avions qui ont atteint leur target
   for (let i = vehicules.length - 1; i >= 0; i--) {
@@ -117,7 +154,7 @@ function creerAvionBordure() {
     targetY = random(0, height);
   }
 
-  return new Avion(x, y, avionImg, random(10, 100), targetX, targetY);
+  return new Avion(x, y, avionImg, random(10, 100), targetX, targetY, 40);
 }
 
 function keyPressed() {
@@ -136,4 +173,28 @@ function keyPressed() {
     //   vehicules.push(v);
     // }
   }
+}
+
+function creerUnSlider(label, tabVehicules, min, max, val, step, posX, posY, propriete) {
+  let slider = createSlider(min, max, val, step);
+
+  let labelP = createP(label);
+  labelP.position(posX, posY);
+  labelP.style('color', 'white');
+
+  slider.position(posX + 120, posY + 15);
+
+  let valueSpan = createSpan(slider.value());
+  valueSpan.position(posX + 300, posY + 17);
+  valueSpan.style('color', 'white');
+  valueSpan.html(slider.value());
+
+  slider.input(() => {
+    valueSpan.html(slider.value());
+    tabVehicules.forEach(vehicle => {
+      vehicle[propriete] = slider.value();
+    });
+  });
+
+  return slider;
 }

@@ -1,10 +1,10 @@
 class Avion extends Vehicle {
-    constructor(x, y, img, altitude, targetX, targetY) {
+    constructor(x, y, img, altitude, targetX, targetY, carburant = 100) {
         super(x, y);
         // Propriétés spécifiques à l'avion (différences avec Vehicle original)
         this.img = img;
         this.alt = altitude;
-        this.carburant = 100; // pourcentage de carburant
+        this.carburant = carburant; // pourcentage de carburant
         // Target de l'avion définie à sa création
         this.target = createVector(targetX, targetY);
     }
@@ -12,8 +12,8 @@ class Avion extends Vehicle {
     // Override: la vitesse dépend de l'altitude
     applyBehaviors(target, obstacles, vehicules) {
         // Ajuster maxSpeed selon l'altitude : de 1 (altitude 0) à 8 (altitude 100)
-        this.maxSpeed = map(this.alt, 0, 100, 1, 8);
-        
+        this.maxSpeed = map(this.alt, 0, 100, 1, 4);
+
         // Appeler la méthode parent avec la nouvelle maxSpeed
         super.applyBehaviors(target, obstacles, vehicules);
     }
@@ -28,6 +28,13 @@ class Avion extends Vehicle {
         // formes pleines
         fill(this.color);
 
+        // Clignotement si carburant < 20%
+        let opacite = 255;
+        if (this.carburant < 20) {
+            // Clignote tous les 20 frames
+            opacite = (frameCount % 20) < 10 ? 255 : 0;
+        }
+
         // sauvegarde du contexte graphique (couleur pleine, fil de fer, épaisseur du trait,
         // position et rotation du repère de référence)
         push();
@@ -40,8 +47,8 @@ class Avion extends Vehicle {
         let offsetY = 30;
 
         // La taille augmente progressivement avec l'altitude : 0 à altitude 0, 1 à altitude 100
-        let tailleX = map(this.alt, 0, 100, 0, 1);
-        let tailleY = map(this.alt, 0, 100, 0, 1);
+        let tailleX = map(this.alt, 0, 100, 0.2, 1);
+        let tailleY = map(this.alt, 0, 100, 0.2, 1);
 
         // Affiche l'image si disponible, sinon affiche le triangle
         if (this.img) {
@@ -50,19 +57,22 @@ class Avion extends Vehicle {
             push()
             scale(tailleX / 2, tailleY / 2);
 
-            tint(0, 0, 0, 150); // Applique une teinte noire avec une certaine transparence
+            tint(0, 0, 0, opacite); // Ombre avec opacité variable
             image(this.img, 0 + offsetX, 0 + offsetY, this.r_pourDessin * 2, this.r_pourDessin * 2);
 
             pop();
 
             push();
             scale(tailleX, tailleY); // taille avion base
+            tint(255, 255, 255, opacite); // Opacité variable
             image(this.img, 0, 0, this.r_pourDessin * 2, this.r_pourDessin * 2);
             pop();
             imageMode(CORNER);
         } else {
             // Dessin d'un véhicule sous la forme d'un triangle
-            triangle(-this.r_pourDessin, -this.r_pourDessin / 2, -this.r_pourDessin, this.r_pourDessin / 2, this.r_pourDessin, 0);
+            if (opacite > 0) {
+                triangle(-this.r_pourDessin, -this.r_pourDessin / 2, -this.r_pourDessin, this.r_pourDessin / 2, this.r_pourDessin, 0);
+            }
         }
 
         // cercle pour le debug
@@ -79,7 +89,8 @@ class Avion extends Vehicle {
             push();
             fill(255);
             textAlign(CENTER, CENTER);
-            textSize(10);
+            textSize(12);
+            textStyle(NORMAL);
             text("Alt: " + this.alt.toFixed(0), this.pos.x, this.pos.y - this.r_pourDessin - 15);
             // afficher le carburant
             text("Carburant: " + this.carburant.toFixed(0) + "%", this.pos.x, this.pos.y - this.r_pourDessin);
