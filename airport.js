@@ -6,7 +6,6 @@ class Airport {
         // Direction aléatoire
         this.alt = 0;
         this.angle = random(TWO_PI);
-        this.color = "white";
     }
 
     // Pas de comportements autonomes - l'entité est statique
@@ -26,13 +25,14 @@ class Airport {
 
     // Dessiner l'aéroport
     drawVehicle() {
+
         push();
         translate(this.pos.x, this.pos.y);
         rotate(this.angle);
 
         stroke(0);
         strokeWeight(2);
-        
+
         // Croix au centre
         line(0, -15, 0, 50);
 

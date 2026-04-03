@@ -32,7 +32,7 @@ class Avion extends Vehicle {
         let opacite = 255;
         if (this.carburant < 20) {
             // Clignote tous les 20 frames
-            opacite = (frameCount % 20) < 10 ? 255 : 0;
+            opacite = (frameCount % 30) < 10 ? 255 : 0;
         }
 
         // sauvegarde du contexte graphique (couleur pleine, fil de fer, épaisseur du trait,
@@ -57,15 +57,16 @@ class Avion extends Vehicle {
             push()
             scale(tailleX / 2, tailleY / 2);
 
-            tint(0, 0, 0, opacite); // Ombre avec opacité variable
+            tint(0, 0, 0, 255); // Ombre toujours visible
             image(this.img, 0 + offsetX, 0 + offsetY, this.r_pourDessin * 2, this.r_pourDessin * 2);
 
             pop();
 
             push();
             scale(tailleX, tailleY); // taille avion base
-            tint(255, 255, 255, opacite); // Opacité variable
+            tint(255, 255, 255, 255); // Avion toujours visible
             image(this.img, 0, 0, this.r_pourDessin * 2, this.r_pourDessin * 2);
+
             pop();
             imageMode(CORNER);
         } else {
@@ -75,14 +76,26 @@ class Avion extends Vehicle {
             }
         }
 
+        pop();
+        imageMode(CORNER);
+
+        // Petite icône clignotante en haut à droite si carburant bas (orientée vers le haut, comme le texte)
+        if (this.carburant < 20 && opacite > 0) {
+            if (typeof essenceImg !== 'undefined') {
+                push();
+                tint(255, 255, 255, opacite);
+                imageMode(CENTER);
+                image(essenceImg, this.pos.x + 20, this.pos.y - this.r_pourDessin - 15, 15, 15);
+                pop();
+            }
+        }
+
         // cercle pour le debug
         if (Vehicle.debug) {
             stroke(255);
             noFill();
             circle(0, 0, this.r);
         }
-
-        pop();
 
         // Afficher le texte au-dessus du véhicule (non affecté par la rotation)
         if (Vehicle.debug) {

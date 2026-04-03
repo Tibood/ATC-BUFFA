@@ -6,16 +6,21 @@ let entities = [];
 let nbAvionsSlider;
 
 let avionImg;
+let essenceImg;
 
 function preload() {
   avionImg = loadImage('assets/mode-avion.png');
+  essenceImg = loadImage('assets/station-essence.png');
 }
 
 function setup() {
 
   createCanvas(windowWidth, windowHeight);
 
-  nbAvionsSlider = creerUnSlider("Nombre avions", vehicules, 0, 20, 0, 1, 20, 20, "nbAvionsSlider");
+  nbAvionsSlider = creerUnSlider("Nombre avions", vehicules, 0, 20, 1, 1, 20, 20, "nbAvionsSlider");
+  maxaltitudeAvionDefault = creerUnSlider("Altitude max", vehicules, 0, 100, 50, 1, 20, 40, "altitude");
+  maxCarburantDefault = creerUnSlider("Carburant max", vehicules, 10, 100, 100, 10, 20, 60, "maxCarburant");
+
 
   // pursuer1 = new Avion(100, 100, avionImg, 20);
   // vehicules.push(pursuer1);
@@ -154,7 +159,7 @@ function creerAvionBordure() {
     targetY = random(0, height);
   }
 
-  return new Avion(x, y, avionImg, random(10, 100), targetX, targetY, 40);
+  return new Avion(x, y, avionImg, random(10, maxaltitudeAvionDefault.value()), targetX, targetY, random(20, maxCarburantDefault.value()));
 }
 
 function keyPressed() {
