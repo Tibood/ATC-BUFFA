@@ -61,7 +61,7 @@ J'aime bien quand c'est inutile, surtout que j'ai passé un temps fou dessus pou
 ### Sliders
 | Slider | Min | Max | Défaut | Pas | Description |
 |---|---|---|---|---|---|
-| **Nombre avions** | 0 | 20 | 1 | 1 | Nombre d'avions simultanés dans la simulation |
+| **Nombre avions** | 0 | 20 | 1 | 1 | Nombre d'avions simultanés dans la simulation (⚠️ : performance - héberger sur le VPS le moins cher de OVH) |
 | **Altitude max** | 0 | 100 | 50 | 1 | Altitude maximale attribuée aux avions à leur création |
 | **Carburant max** | 10 | 100 | 100 | 10 | Carburant maximum des avions au départ (déclenche l'atterrissage sous 30%) |
 | **Nombre nuages** | 0 | 30 | 5 | 1 | Nombre de nuages décoratifs qui traversent la scène poussés par le vent |
