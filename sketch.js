@@ -250,17 +250,20 @@ function keyPressed() {
 // Crée un nuage sur le bord opposé à la direction du vent
 function creerNuage() {
   let x, y;
+  let bord = floor(random(4)); // 0:haut, 1:bas, 2:gauche, 3:droite
 
-  // Spawn sur le bord opposé à la direction du vent
-  if (windDirection.x > 0) {
+  if (bord === 0) {
+    x = random(0, width);
+    y = random(-200, -50);
+  } else if (bord === 1) {
+    x = random(0, width);
+    y = random(height + 50, height + 200);
+  } else if (bord === 2) {
     x = random(-200, -50);
+    y = random(0, height);
   } else {
     x = random(width + 50, width + 200);
-  }
-  if (windDirection.y > 0) {
-    y = random(-200, -50);
-  } else {
-    y = random(height + 50, height + 200);
+    y = random(0, height);
   }
 
   return new Nuage(x, y, windDirection, random(nuageImgs));
