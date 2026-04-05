@@ -36,3 +36,8 @@ jobs:
             ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           cache-from: type=registry,ref=${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:buildcache
           cache-to: type=registry,ref=${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:buildcache,mode=max
+
+      - name: Call deployment webhook
+        run: |
+          curl -X POST https://lavoiturerouge.fr/api/deploy/jMaUYMlYyYQxqxdChDhgZ \
+            -H "Content-Type: application/json"
