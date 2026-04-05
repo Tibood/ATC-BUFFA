@@ -17,8 +17,7 @@ Hébergé sur un VPS OVH personnel avec Dockploy pour le déploiement.
 
 Lien : [atc.lavoitureouge.fr](http://atc.lavoitureouge.fr)
 
-Vidéo YouTube : WIP
-
+Vidéo YouTube : https://youtu.be/_IlZoIkEeUc
 ## Objectifs et contraintes
 
 ### Zone d'interdiction de survol
