@@ -11,9 +11,6 @@ J'ai vu un article (de Airbus il me semble) sur un système de pilotage automati
 
 J'ai eu beaucoup de mal à faire la partie où l'avion atterrit dans un aéroport quand il manque de carburant. L'exemple que vous avez fourni dans followPath ne suivait pas parfaitement la ligne.
 
-
-
-
 ## Hébergement
 
 Hébergé sur un VPS OVH personnel avec Dockploy pour le déploiement.
