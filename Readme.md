@@ -91,14 +91,51 @@ Déclenchement : cherche l'aéroport le plus proche non bloqué par un obstacle,
 | **Descente** | réduction `alt -= 3` | — | L'altitude descend à 0 progressivement (< 100px de l'aéroport) |
 
 
-
 ## IA et IDE
-Ytilisation de Visual Studio Code et de GitHub Copilot pour le développement
+Utilisation de Visual Studio Code et de GitHub Copilot pour le développement
 
 Les modèles utilisés sont : Claude Haiku 4.5 et Opus 4.6
 Passage de Claude Haiku 4.5 à Opus 4.6 pour plus de tokens.
 
  Le fichier d'instructions utilisé pour Copilot est [.github/copilot-instructions.md](.github/copilot-instructions.md).
+
+ ## Déploiement
+
+### Architecture
+
+Le projet est servi via **Nginx Alpine** dans un conteneur Docker, déployé automatiquement sur un VPS OVH via **Dokploy**.
+
+### Workflow CI/CD
+
+Le fichier [`.github/workflows/docker.yml`](.github/workflows/docker.yml) déclenche automatiquement le déploiement à chaque push sur `main` :
+
+```
+Push sur main → GitHub Actions → Build image Docker → Push sur Docker Hub → Webhook Dokploy → Déploiement auto
+```
+
+**Étapes du workflow :**
+
+1. **Checkout** du code
+2. **Build** de l'image Docker (Nginx Alpine + fichiers statiques)
+3. **Push** sur Docker Hub (`thiboood/atc-buffa:latest` + tag SHA du commit)
+4. **Appel webhook** Dokploy pour déclencher le redéploiement automatique
+
+### Dockerfile
+
+```dockerfile
+FROM nginx:alpine
+COPY . /usr/share/nginx/html/
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+```
+
+### Hébergement
+
+- **VPS** : OVH personnel
+- **Orchestration** : Dokploy
+- **Registry** : Docker Hub (`thiboood/atc-buffa`)
+- **Lien** : [atc.lavoitureouge.fr](http://atc.lavoitureouge.fr)
+
 
 ## link :
 https://docs.google.com/presentation/d/1KACjUkg9xarx656LXUrwJLLHulNr8NWvjlmMHctGVtQ/edit?slide=id.g3a2f9fd46d8_0_0#slide=id.g3a2f9fd46d8_0_0
