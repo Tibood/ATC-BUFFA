@@ -55,6 +55,18 @@ class Airport {
         this.drawVehicle();
     }
 
+    // Dessiner le cercle vert en arrière-plan (appelé avant tout le reste)
+    drawBackground() {
+        push();
+        translate(this.pos.x, this.pos.y);
+        rotate(this.angle);
+        fill(0, 200, 0);
+        stroke(0, 200, 0);
+        strokeWeight(2);
+        circle(0, 17.5, 200);
+        pop();
+    }
+
     // Dessiner l'aéroport
     drawVehicle() {
 
@@ -65,15 +77,7 @@ class Airport {
         stroke(0);
         strokeWeight(2);
 
-        // Cercle vert plein autour de la piste
-        fill(0, 200, 0);
-        stroke(0, 200, 0);
-        strokeWeight(2);
-        circle(0, 17.5, 200);
-
         // Croix au centre
-        stroke(0);
-        strokeWeight(2);
         line(0, -15, 0, 50);
 
         pop();

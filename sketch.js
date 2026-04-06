@@ -64,10 +64,10 @@ function draw() {
   // changer le dernier param (< 100) pour effets de trainée
   background(4, 214, 255, 255);
 
-  // dessin des obstacles
-  obstacles.forEach(obstacle => {
-    obstacle.show();
-  })
+  // Dessiner les cercles verts des aéroports en arrière-plan
+  entities.forEach(entity => {
+    if (entity.drawBackground) entity.drawBackground();
+  });
 
   // Spawn aléatoire de nuages (environ 1 toutes les 2-3 secondes à 60fps)
   // Spawn de nuages si en dessous du slider
@@ -143,7 +143,12 @@ function draw() {
     });
   }
 
-  // Affichage des nuages au-dessus des pistes et des avions
+  // dessin des obstacles (au-dessus des pistes et des avions)
+  obstacles.forEach(obstacle => {
+    obstacle.show();
+  });
+
+  // Affichage des nuages au-dessus de tout
   for (let n of nuages) {
     n.show();
   }
